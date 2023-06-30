@@ -1,0 +1,26 @@
+version: "3"
+services:
+  database:
+    image: postgres:14
+    container_name: mtmm-postgres
+    volumes:
+      - ./docker/data/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=mtmm
+      - ALLOW_IP_RANGE=0.0.0.0/0
+
+  web_app:
+    build:
+      context: ./
+      dockerfile: docker/Dockerfile.local
+    working_dir: /app
+    volumes:
+      - ./:/app
+    ports:
+      - "5000:5000"
+    environment:
+      - "DB_PORT=5432"
+      - "DB_HOST=database"
+
